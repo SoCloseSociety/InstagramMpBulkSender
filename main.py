@@ -62,14 +62,16 @@ console = Console(theme=SOCLOSE_THEME)
 
 # ─── Configuration ───────────────────────────────────────────
 
+from pathlib import Path
+
 load_dotenv()
 
 INSTAGRAM_EMAIL = os.getenv("INSTAGRAM_EMAIL", "")
 INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD", "")
 BROWSER = os.getenv("BROWSER", "firefox").lower()
-MESSAGE_FILE = os.getenv("MESSAGE_FILE", "message.txt")
-PROFILES_FILE = os.getenv("PROFILES_FILE", "profile_links.csv")
-SENT_FILE = os.getenv("SENT_FILE", "already_send_message.csv")
+MESSAGE_FILE = validate_file_path(os.getenv("MESSAGE_FILE", "message.txt"))
+PROFILES_FILE = validate_file_path(os.getenv("PROFILES_FILE", "profile_links.csv"))
+SENT_FILE = validate_file_path(os.getenv("SENT_FILE", "already_send_message.csv"))
 MAX_MESSAGES = int(os.getenv("MAX_MESSAGES", "10000"))
 HEADLESS = os.getenv("HEADLESS", "false").lower() == "true"
 MIN_DELAY = int(os.getenv("MIN_DELAY", "8"))
@@ -119,9 +121,20 @@ def extract_username(value: str) -> str:
     return value
 
 
+def validate_file_path(filepath: str) -> str:
+    """Validate that the provided file path exists and is accessible."""
+    path = Path(filepath)
+    if not path.exists():
+        console.print(f"[error]File not found: {filepath}[/]")
+        sys.exit(1)
+    if not path.is_file():
+        console.print(f"[error]{filepath} is not a file.[/]")
+        sys.exit(1)
+    return filepath
+
 def load_message(filepath: str) -> str:
     """Load the message template from file."""
-    path = Path(filepath)
+    path = validate_file_path(filepath)
     if not path.exists():
         console.print(f"[error]Message file not found: {filepath}[/]")
         sys.exit(1)
@@ -135,7 +148,7 @@ def load_message(filepath: str) -> str:
 
 def load_profiles(filepath: str) -> list:
     """Load target profile usernames from CSV."""
-    path = Path(filepath)
+    path = validate_file_path(filepath)
     if not path.exists():
         console.print(f"[error]Profile file not found: {filepath}[/]")
         sys.exit(1)
@@ -158,7 +171,7 @@ def load_profiles(filepath: str) -> list:
 
 def load_sent(filepath: str) -> set:
     """Load the set of already-messaged usernames."""
-    path = Path(filepath)
+    path = validate_file_path(filepath)
     if not path.exists():
         return set()
 

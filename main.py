@@ -249,47 +249,51 @@ def dismiss_popup(driver, timeout=5):
 
 def login(driver):
     """Log in to Instagram."""
-    console.print("[info]Navigating to Instagram login...[/]")
-    driver.get("https://www.instagram.com/accounts/login/")
-    random_delay(5, 8)
+    try:
+        console.print("[info]Navigating to Instagram login...[/]")
+        driver.get("https://www.instagram.com/accounts/login/")
+        random_delay(5, 8)
 
-    # Dismiss cookie consent if present
-    dismiss_popup(driver, timeout=4)
+        # Dismiss cookie consent if present
+        dismiss_popup(driver, timeout=4)
 
-    # Enter credentials
-    console.print("[info]Entering credentials...[/]")
+        # Enter credentials
+        console.print("[info]Entering credentials...[/]")
 
-    username_field = WebDriverWait(driver, 15).until(
-        EC.visibility_of_element_located((By.NAME, "username"))
-    )
-    password_field = driver.find_element(By.NAME, "password")
+        username_field = WebDriverWait(driver, 15).until(
+            EC.visibility_of_element_located((By.NAME, "username"))
+        )
+        password_field = driver.find_element(By.NAME, "password")
 
-    username_field.clear()
-    username_field.send_keys(INSTAGRAM_EMAIL)
-    time.sleep(0.5)
-    password_field.clear()
-    password_field.send_keys(INSTAGRAM_PASSWORD)
-    time.sleep(0.5)
+        username_field.clear()
+        username_field.send_keys(INSTAGRAM_EMAIL)
+        time.sleep(0.5)
+        password_field.clear()
+        password_field.send_keys(INSTAGRAM_PASSWORD)
+        time.sleep(0.5)
 
-    # Submit login
-    driver.find_element(By.XPATH, "//button[@type='submit']").click()
-    console.print("[info]Login submitted.[/]")
+        # Submit login
+        driver.find_element(By.XPATH, "//button[@type='submit']").click()
+        console.print("[info]Login submitted.[/]")
 
-    random_delay(5, 8)
+        random_delay(5, 8)
 
-    # Wait for user to handle 2FA or any manual verification
-    console.print(
-        "[warning]If 2FA or a challenge appears, complete it in the browser now.[/]"
-    )
-    input("\n  Press ENTER once you are logged in and ready to continue... ")
-    console.print()
+        # Wait for user to handle 2FA or any manual verification
+        console.print(
+            "[warning]If 2FA or a challenge appears, complete it in the browser now.[/]"
+        )
+        input("\n  Press ENTER once you are logged in and ready to continue... ")
+        console.print()
 
-    random_delay(2, 4)
+        random_delay(2, 4)
 
-    # Dismiss "Turn on notifications" popup
-    dismiss_popup(driver, timeout=4)
+        # Dismiss "Turn on notifications" popup
+        dismiss_popup(driver, timeout=4)
 
-    console.print("[success]Login complete.[/]")
+        console.print("[success]Login complete.[/]")
+    except (WebDriverException, TimeoutException) as e:
+        log.error(f"Login failed: {e}")
+        sys.exit(1)
 
 
 def find_and_click_message_button(driver) -> bool:

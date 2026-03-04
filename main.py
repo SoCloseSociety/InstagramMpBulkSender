@@ -188,11 +188,13 @@ def save_sent(filepath: str, sent: set):
 
 
 def random_delay(min_sec=None, max_sec=None):
-    """Sleep for a random duration to mimic human behavior."""
+    """Sleep for a random duration to mimic human behavior with more variability."""
     lo = min_sec if min_sec is not None else MIN_DELAY
     hi = max_sec if max_sec is not None else MAX_DELAY
-    time.sleep(random.uniform(lo, hi))
-
+    delay = random.uniform(lo, hi)
+    # Introduce some jitter to simulate natural pauses
+    jitter = random.uniform(-0.5, 0.5)
+    time.sleep(delay + jitter)
 
 # ─── Browser ─────────────────────────────────────────────────
 

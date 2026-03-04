@@ -66,7 +66,7 @@ load_dotenv()
 
 INSTAGRAM_EMAIL = os.getenv("INSTAGRAM_EMAIL", "")
 INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD", "")
-BROWSER = os.getenv("BROWSER", "firefox").lower()
+
 MESSAGE_FILE = os.getenv("MESSAGE_FILE", "message.txt")
 PROFILES_FILE = os.getenv("PROFILES_FILE", "profile_links.csv")
 SENT_FILE = os.getenv("SENT_FILE", "already_send_message.csv")

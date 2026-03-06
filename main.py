@@ -64,8 +64,13 @@ console = Console(theme=SOCLOSE_THEME)
 
 load_dotenv()
 
-INSTAGRAM_EMAIL = os.getenv("INSTAGRAM_EMAIL", "")
-INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD", "")
+with open('.env', 'r') as env_file:
+    for line in env_file:
+        key, value = line.strip().split('=')
+        if key == 'INSTAGRAM_EMAIL':
+            INSTAGRAM_EMAIL = value
+        elif key == 'INSTAGRAM_PASSWORD':
+            INSTAGRAM_PASSWORD = value
 BROWSER = os.getenv("BROWSER", "firefox").lower()
 MESSAGE_FILE = os.getenv("MESSAGE_FILE", "message.txt")
 PROFILES_FILE = os.getenv("PROFILES_FILE", "profile_links.csv")
